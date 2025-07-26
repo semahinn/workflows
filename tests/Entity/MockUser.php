@@ -82,4 +82,29 @@ class MockUser implements UserInterface {
     return $this->username;
   }
 
+  public static function john() {
+    $user = static::USERS[1];
+    return new MockUser($user['id'], $user['uuid'], $user['display_name'], $user['username']);
+  }
+
+  public static function peter() {
+    $user = static::USERS[2];
+    return new MockUser($user['id'], $user['uuid'], $user['display_name'], $user['username']);
+  }
+
+  public static function mike() {
+    $user = static::USERS[3];
+    return new MockUser($user['id'], $user['uuid'], $user['display_name'], $user['username']);
+  }
+
+  public static function dave() {
+    $user = static::USERS[4];
+    return new MockUser($user['id'], $user['uuid'], $user['display_name'], $user['username']);
+  }
+
+  public static function sean() {
+    $user = static::USERS[5];
+    return new MockUser($user['id'], $user['uuid'], $user['display_name'], $user['username']);
+  }
+
 }

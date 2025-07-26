@@ -7,6 +7,7 @@ use Snr\Plugin\Adapter\SymfonyContainerAdapter;
 use Snr\Plugin\Tests\TestKernel;
 use Snr\Workflows\Dependency;
 use Snr\Workflows\DependencySingleton;
+use Snr\Workflows\Tests\Entity\MockUser;
 use Snr\Workflows\Tests\Entity\MockUserStorage;
 use Snr\Workflows\Tests\WorkflowItem\MockUserItem;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -43,14 +44,24 @@ class Test extends TestCase {
     $container->compile();
     $container->get('workflow_item_dependency');
 
-    $john = MockUserItem::create([
+    $dave = MockUserItem::create([
       'id' => 'user_1',
-      'user_uuid' => 'user_1',
+      'user_uuid' => MockUser::dave()->uuid(),
     ]);
-    // или
-//    $john = $workflow_manager->createInstance('mock_user_item', [
-//      'id' => 'user_1'
+    //    или
+//    $dave = $workflow_manager->createInstance('mock_user_item', [
+//      'id' => 'user_1',
+//      'user_uuid' => MockUser::dave()->uuid(),
 //    ]);
+
+    $dave->addItem(MockUserItem::create([
+      'id' => 'user_1_1',
+      'user_uuid' => MockUser::mike()->uuid(),
+    ]));
+    $dave->addItem(MockUserItem::create([
+      'id' => 'user_1_2',
+      'user_uuid' => MockUser::peter()->uuid(),
+    ]));
 
   }
 
