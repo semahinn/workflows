@@ -134,7 +134,7 @@ trait OperationTrait {
   /**
    * {@inheritdoc}
    */
-  public function setIgnoreAccessInOptions(array &$options, string $key = 'user_access') {
+  public function setIgnoreAccessInOptions(array &$options, string $key) {
     if (!empty($options['ignore_access']) &&
       in_array($key, $options['ignore_access']))
       $options['ignore_access'] += ['user_access'];

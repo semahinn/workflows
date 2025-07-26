@@ -61,7 +61,7 @@ trait ItemWithUserTrait {
     $properties = $this->foundPropertiesWhenPerform($options, ['user_uuid_property']);
     if (isset($properties['user_uuid_property'])) {
       $cut = $this->getMessagePart1();
-      if ($this->getState() == WorkflowItemInterface::STATE_COMPLETED) {
+      if ($this->getState() == CompleteOperationInterface::STATE_COMPLETED) {
         $user_message = "Для этапа $cut невозможно назначить пользователя, т.к. этап уже завершён";
         $access_results['default_access'] = AccessResult::forbidden($user_message);
         return;

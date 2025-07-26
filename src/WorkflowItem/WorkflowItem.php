@@ -2,9 +2,10 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Psr\Container\ContainerInterface;
 use Snr\Workflows\Access\AccessResult;
 use Snr\Workflows\Access\AccessResultInterface;
+use Snr\Workflows\Dependency;
+use Snr\Workflows\DependencySingleton;
 use Snr\Workflows\Manager\WorkflowItemManagerInterface;
 use Snr\Workflows\Util\NestedArray;
 use Snr\Workflows\WorkflowItemProperty\State;
@@ -62,11 +63,6 @@ abstract class WorkflowItem implements WorkflowItemInterface {
   protected $thirdPartySettings = [];
 
   /**
-   * @var WorkflowItemManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
    * @param array $data
    *  Параметры создания этапа:
    *  1. Есть у любого этапа, устанавливаются в конструкторе:
@@ -81,12 +77,8 @@ abstract class WorkflowItem implements WorkflowItemInterface {
    *  2. Свойства (атрибуты), устанавливаемые методом perform
    *  'state' - состояние этапа,
    *  'label' - отображаемое название этапа
-   *
-   * @param ContainerInterface $plugin_manager
    */
-  public function __construct(array $data, ContainerInterface $plugin_manager) {
-
-    $this->pluginManager = $plugin_manager;
+  public function __construct(array $data) {
 
     $this->isNew = true;
     if (isset($data['is_new']) && is_bool($data['is_new']))
@@ -184,7 +176,7 @@ abstract class WorkflowItem implements WorkflowItemInterface {
   public function isBlocked() {
     return false;
   }
-  
+
   /**
    * @param array $data
    *
@@ -511,7 +503,7 @@ abstract class WorkflowItem implements WorkflowItemInterface {
    * @see AccessResultInterface
    */
   protected function canOperation(string $operation, array &$options, array &$access_results) {
-    // 1) Если элемент в состоянии "Завершён" (WorkflowItemInterface::STATE_COMPLETED),
+    // 1) Если элемент в состоянии "Завершён" (STATE_COMPLETED),
     // то для него запрещены действия "Edit" и "Complete"
 
     // В режиме build_only многих проверок для действий не происходит
@@ -745,14 +737,14 @@ abstract class WorkflowItem implements WorkflowItemInterface {
    * @return WorkflowItemManagerInterface
    */
   public final function getPluginManager() {
-    return $this->pluginManager;
+    return DependencySingleton::getInstance()->getWorkflowItemManager();
   }
 
   /**
    * {@inheritdoc}
    */
   public final function getPluginDefinition() {
-    return $this->getPluginManager()->getDefinitionByClass(static::class);
+    return $this->getPluginManager()->getDefinitionByPluginClass(static::class);
   }
   
   /**

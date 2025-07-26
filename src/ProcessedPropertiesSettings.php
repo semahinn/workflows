@@ -2,9 +2,6 @@
 
 namespace Snr\Workflows;
 
-/**
- * Class PropertyProcessor
- */
 class ProcessedPropertiesSettings {
 
   /**

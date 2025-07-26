@@ -2,6 +2,8 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
+use Snr\Workflows\Dependency;
+use Snr\Workflows\DependencySingleton;
 use Snr\Workflows\Entity\UserInterface;
 
 /**
@@ -21,7 +23,7 @@ trait ItemWithUserContextTrait {
     $context = $root->getContext();
 
     if (isset($context['user_id'])) {
-      $user = $this->getPluginManager()->getUserStorage()->load($context['user_id']);
+      $user = DependencySingleton::getInstance()->getUserStorage()->load($context['user_id']);
       if (!$user) {
         $type_definition = $this->getPluginDefinition();
         $message =
@@ -30,7 +32,7 @@ trait ItemWithUserContextTrait {
       }
     }
     else {
-      $user = $this->getPluginManager()->getUserStorage()->getCurrentUser();
+      $user = DependencySingleton::getInstance()->getUserStorage()->getCurrentUser();
     }
 
     return $user;
@@ -40,13 +42,7 @@ trait ItemWithUserContextTrait {
    * {@inheritdoc}
    */
   public function userFromContextIsOneOfParentUser(int $depth = 0) {
-    /**
-     * @var $user UserInterface
-     */
     $user = $this->getUserFromContext();
-    /**
-     * @var $root AbstractGroupInterface
-     */
     $root = $this->getRoot();
     // Все родительские элементы этого элемента, являющиеся элементами пользователей
     //  (реализуют ItemWithUserInterface)

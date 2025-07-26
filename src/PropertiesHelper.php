@@ -4,9 +4,6 @@ namespace Snr\Workflows;
 
 use Snr\Workflows\WorkflowItem\WorkflowItemInterface;
 
-/**
- * Class PropertiesHelper
- */
 class PropertiesHelper {
 
   /**

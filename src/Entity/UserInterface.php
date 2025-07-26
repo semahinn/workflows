@@ -12,6 +12,6 @@ interface UserInterface extends EntityInterface {
   /**
    * @return string
    */
-  public function username();
+  public function getUsername();
 
 }

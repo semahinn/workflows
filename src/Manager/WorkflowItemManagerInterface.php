@@ -2,10 +2,11 @@
 
 namespace Snr\Workflows\Manager;
 
+use Snr\Workflows\WorkflowItem\AbstractGroupInterface;
+use Snr\Workflows\WorkflowItem\WorkflowItemInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Snr\Plugin\Manager\ByPluginClassInterface;
 use Snr\Plugin\Manager\PluginManagerInterface;
-use Snr\Workflows\Entity\UserStorageInterface;
 
 interface WorkflowItemManagerInterface extends PluginManagerInterface, ByPluginClassInterface {
 
@@ -15,8 +16,13 @@ interface WorkflowItemManagerInterface extends PluginManagerInterface, ByPluginC
   public function getEventDispatcher();
 
   /**
-   * @return UserStorageInterface
+   * @param array $items_array
+   * @param array $context
+   * @param AbstractGroupInterface|null $root
+   *
+   * @return WorkflowItemInterface[]
+   * @throws \Exception
    */
-  public function getUserStorage();
+  public function createInstances(array $items_array, array $context = [], AbstractGroupInterface $root = null);
 
 }

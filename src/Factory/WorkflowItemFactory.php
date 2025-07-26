@@ -40,7 +40,7 @@ class WorkflowItemFactory extends DefaultFactory implements WorkflowItemFactoryI
    * @return WorkflowItemInterface
    */
   protected function doCreate(string $plugin_class, array $configuration) {
-    $instance = new $plugin_class($configuration, $this);
+    $instance = new $plugin_class($configuration);
     if (method_exists($instance, 'doCreate')) {
       $instance->doCreate($configuration);
     }

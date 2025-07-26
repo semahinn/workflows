@@ -2,6 +2,7 @@
 
 namespace Snr\Workflows\Manager;
 
+use Snr\Workflows\WorkflowItem\AbstractGroupInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Snr\Plugin\Manager\ByPluginClassTrait;
 use Snr\Plugin\Manager\DefaultPluginManager;
@@ -35,33 +36,44 @@ class WorkflowItemManager extends DefaultPluginManager implements WorkflowItemMa
    * @var EventDispatcherInterface
    */
   protected $eventDispatcher;
-
-  /**
-   * @var UserStorageInterface
-   */
-  protected $userStorage;
   
   public function __construct(array $namespaces,
-                              EventDispatcherInterface $event_dispatcher,
-                              UserStorageInterface $user_storage) {
+                              EventDispatcherInterface $event_dispatcher) {
     $this->eventDispatcher = $event_dispatcher;
-    $this->userStorage = $user_storage;
     parent::__construct('WorkflowItem', $namespaces, WorkflowItemInterface::class, WorkflowItem::class);
     $this->factory = new WorkflowItemFactory($this, WorkflowItemInterface::class);
   }
 
   /**
-   * @return EventDispatcherInterface
+   * {@inheritdoc}
    */
   public function getEventDispatcher() {
     return $this->eventDispatcher;
   }
 
   /**
-   * @return UserStorageInterface
+   * {@inheritdoc}
    */
-  public function getUserStorage() {
-    return $this->userStorage;
+  public function createInstances(array $items_array, array $context = [], AbstractGroupInterface $root = null) {
+    $instances = [];
+
+    foreach ($items_array as $item) {
+      if (!(isset($item['type']) && is_string($item['type']))) {
+        $interface = WorkflowItemInterface::class;
+        $message = "Невозможно создать экземпляр этапа/маршрута " .
+          "({$interface}), т.к. тип элемента не указан (св-во \"type\")";
+        throw new \InvalidArgumentException($message);
+      }
+
+      if ($definition = $this->getDefinition($item['type'], true)) {
+        unset($item['type']);
+        $item['context'] = $context;
+        if ($root) $item['root_when_create'] = $root;
+        $instances[] = $this->createInstance($definition['type'], $item);
+      }
+    }
+
+    return $instances;
   }
 
 }

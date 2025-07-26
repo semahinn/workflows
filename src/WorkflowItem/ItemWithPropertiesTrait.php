@@ -98,11 +98,9 @@ trait ItemWithPropertiesTrait {
    *
    * @return array
    *  При этом, если произошла ошибка при создании
-   *  одного из свойств, то в результате об этом появится информация (ключ
-   *   'error_message')
+   *  одного из свойств, то в результате об этом появится информация (ключ 'error_message')
    *  ($results[$key]['error_message'])
-   *  Если экземпляр был создан успешно, то он будет в массиве результата (ключ
-   *   'property')
+   *  Если экземпляр был создан успешно, то он будет в массиве результата (ключ 'property')
    *  ($results[$key]['property'])
    */
   protected function foundProperties(

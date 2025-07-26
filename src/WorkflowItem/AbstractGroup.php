@@ -6,7 +6,6 @@ use Snr\Workflows\Access\AccessResult;
 use Snr\Workflows\Access\AccessResultForbidden;
 use Snr\Workflows\Access\AccessResultInterface;
 use Snr\Workflows\Event\GetAllowedPluginsEvent;
-use Snr\Workflows\WorkflowItemCreator;
 
 /**
  * Является базовым классом для всех групп
@@ -67,16 +66,16 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
     // те, что перечислил в родительском doCreate +
     // group_type, group_operator, items, autocomplete_nested_items
     parent::doCreate($data);
+
     $items = [];
     if (!empty($data['items']) && is_array($data['items'])) {
-      /** @var $workflow_item_creator WorkflowItemCreator */
-      $workflow_item_creator = \Drupal::service('workflow_item.creator');
       // 'root_when_create' - необходим для обращения к экземпляру
-      // корневой группы, потому что в момент создания этапа (метод create()),
-      // мы ещё не знаем его корневую группу (св-во rootGroup ещё не установлено,
+      // корневой группы, потому что в момент создания этапа,
+      // мы ещё не может получить его корневую группу (св-во rootGroup ещё не установлено,
       // это произойдет только при вызове метода addItem)
-      $items = $workflow_item_creator->createInstances($data['items'], $this->getContext(), $data['root_when_create'] ?? $this);
+      $items = $this->getPluginManager()->createInstances($data['items'], $this->getContext(), $data['root_when_create'] ?? $this);
     }
+    
     foreach ($items as $item) {
       $this->addItem($item);
     }
@@ -297,7 +296,7 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
         //  куда добавляется элемент $item поддерживает добавление элементов этого типа
         $allowed_items = $this->getAllowedPlugins();
         $allowed = false;
-        $definitions = static::getPluginManager()->getDefinitions();
+        $definitions = $this->getPluginManager()->getDefinitions();
         foreach ($allowed_items as $id) {
           $class = $definitions[$id]['class'];
           if ($item instanceof $class) {
@@ -464,7 +463,7 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
     if (!$root_item) {
       $root_item = $item;
     }
-    $item_to_remove = null;
+
     if ($root_item && $operation == 'RemoveItem' && $item instanceof AbstractGroupInterface &&
       isset($options['item_to_remove']) && ($item_to_remove = $options['item_to_remove'])) {
       return $item_to_remove;
@@ -503,9 +502,8 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
    */
   public function tryAutoCompleteNestedItems(array &$options) {
     if ($this->getGroupType() == AbstractGroupInterface::TYPE_PARALLEL) {
-      // Игнорирую все дискреционные проверки (user_access)
-      //  при автоматическом завершении
-      $this->setIgnoreAccessInOptions($options);
+      // Игнорирую все дискреционные проверки при автоматическом завершении
+      $this->setIgnoreAccessInOptions($options, 'user_access');
       // Если группа параллельная, то, возможно,
       //  ее вложенных завершённых элементов УЖЕ достаточно, чтобы
       //  СЧИТАТЬ, что она может быть автоматически завершена
@@ -523,11 +521,9 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
       }
     } elseif ($this->getGroupType() == AbstractGroupInterface::TYPE_SEQUENTIAL) {
       $current_item = $this->getFirstUncompleted();
-      // Игнорирую все дискреционные проверки (user_access)
-      //  при автоматическом завершении
-      $this->setIgnoreAccessInOptions($options);
-      // Завершаем группу простым образом, если в ней нет
-      //  незавершенных элементов
+      // Игнорирую все дискреционные проверки при автоматическом завершении
+      $this->setIgnoreAccessInOptions($options, 'user_access');
+      // Завершаем группу простым образом, если в ней нет незавершённых элементов
       if (!$current_item && $this->isElementReadyForAutoComplete($options)) {
         parent::doOperation('Complete', $options);
       }
@@ -633,7 +629,7 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
    */
   public function getFirstUncompleted(array $options = []) {
     foreach ($this->items as $item) {
-      if ($item->getState() != WorkflowItemInterface::STATE_COMPLETED) {
+      if ($item->getState() != CompleteOperationInterface::STATE_COMPLETED) {
         return $item;
       }
     }
@@ -651,7 +647,7 @@ abstract class AbstractGroup extends WorkflowItem implements AbstractGroupInterf
       $items = [$current_element];
     }
     foreach ($items as $item) {
-      if (!$only_current || $item->getState() != WorkflowItemInterface::STATE_COMPLETED) {
+      if (!$only_current || $item->getState() != CompleteOperationInterface::STATE_COMPLETED) {
         // list
         if (strtolower($mode) == 'list') {
           $results[$item->id()] = [
