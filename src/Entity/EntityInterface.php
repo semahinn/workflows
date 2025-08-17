@@ -14,4 +14,9 @@ interface EntityInterface {
    */
   public function uuid();
 
+  /**
+   * @return string
+   */
+  public function label();
+
 }

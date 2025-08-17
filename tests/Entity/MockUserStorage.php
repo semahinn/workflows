@@ -26,7 +26,7 @@ class MockUserStorage implements UserStorageInterface {
       if ((isset($properties['id']) && $properties['id'] == $user['id']) ||
         (isset($properties['uuid']) && $properties['uuid'] == $user['uuid']) ||
         (isset($properties['username']) && $properties['username'] == $user['username'])) {
-        $results[$id] = $user;
+        $results[$id] = new MockUser($user['id'], $user['uuid'], $user['display_name'], $user['username']);;
       }
     }
     return $results;

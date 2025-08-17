@@ -71,6 +71,13 @@ class MockUser implements UserInterface {
   /**
    * {@inheritdoc}
    */
+  public function label() {
+    return $this->getDisplayName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDisplayName() {
     return $this->displayName;
   }

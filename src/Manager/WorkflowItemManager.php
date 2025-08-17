@@ -7,7 +7,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Snr\Plugin\Manager\ByPluginClassTrait;
 use Snr\Plugin\Manager\DefaultPluginManager;
 use Snr\Workflows\Factory\WorkflowItemFactory;
-use Snr\Workflows\Entity\UserStorageInterface;
 use Snr\Workflows\WorkflowItem\WorkflowItemInterface;
 use Snr\Workflows\Annotation\WorkflowItem;
 
@@ -69,7 +68,7 @@ class WorkflowItemManager extends DefaultPluginManager implements WorkflowItemMa
         unset($item['type']);
         $item['context'] = $context;
         if ($root) $item['root_when_create'] = $root;
-        $instances[] = $this->createInstance($definition['type'], $item);
+        $instances[] = $this->createInstance($definition['id'], $item);
       }
     }
 

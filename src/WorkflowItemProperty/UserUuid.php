@@ -2,6 +2,8 @@
 
 namespace Snr\Workflows\WorkflowItemProperty;
 
+use Snr\Workflows\DependencySingleton;
+
 class UserUuid extends Property implements UserUuidInterface {
 
   use EntityPropertyTrait;
@@ -24,11 +26,9 @@ class UserUuid extends Property implements UserUuidInterface {
     if (isset($data[$label_key]) && is_string($data[$label_key]))
       $this->value[$label_key] = $data[$label_key];
 
-    $instances = [];
-    foreach ($this->getAllowedEntityInstances() as $instance)
-      $instances[$instance->uuid()] = $instance;
+    $results = DependencySingleton::getInstance()->getUserStorage()->loadByProperties(['uuid' => $data[$uuid_key]]);
+    $current = $results ? current($results) : null;
 
-    $current = ($instances[$data[$uuid_key]] ?? null);
     if (static::getEntityRequiredFlagFromOptions($data) && !$current) {
       $reason = "\"$label\" ($uuid_key) должна быть одним из допустимых значений";
       throw new \Exception($reason);

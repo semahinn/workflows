@@ -63,6 +63,16 @@ class Test extends TestCase {
       'user_uuid' => MockUser::peter()->uuid(),
     ]));
 
+    $dave_data = $dave->toArray();
+    // Сохраняем $dave_data куда либо
+
+    // Сохранение ...
+
+    // Создаём на основе загруженных $dave_data
+    $dave_loaded = MockUserItem::create($dave_data);
+
+    $end = '';
+
   }
 
 }
