@@ -2,7 +2,7 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResult;
+use Snr\AccessResult\AccessResult;
 use Snr\Workflows\WorkflowItemProperty\OwnerUuid;
 use Snr\Workflows\WorkflowItemProperty\UserUuid;
 

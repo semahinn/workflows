@@ -2,9 +2,9 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResult;
-use Snr\Workflows\Access\AccessResultForbidden;
-use Snr\Workflows\Access\AccessResultInterface;
+use Snr\AccessResult\AccessResult;
+use Snr\AccessResult\AccessResultForbidden;
+use Snr\AccessResult\AccessResultInterface;
 use Snr\Workflows\Event\OperationEvent;
 use Snr\Workflows\Exception\AccessResultException;
 

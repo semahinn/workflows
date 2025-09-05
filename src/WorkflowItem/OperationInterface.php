@@ -2,7 +2,7 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResultInterface;
+use Snr\AccessResult\AccessResultInterface;
 
 /**
  * Для того, чтобы изменить состоянием этапа или

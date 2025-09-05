@@ -2,7 +2,7 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResultInterface;
+use Snr\AccessResult\AccessResultInterface;
 
 /**
  * Описывает любую группу этапов

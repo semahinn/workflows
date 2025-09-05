@@ -22,7 +22,8 @@
     "require": {
         "php": ">=7.3",
         "symfony/event-dispatcher": "3.2.14",
-        "snr/plugin": "^1.0"
+        "snr/plugin": "^1.0",
+		"snr/access_result": "^1.0"
     },
     "require-dev": {
         "symfony/dependency-injection": "3.2.14",

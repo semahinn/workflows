@@ -2,7 +2,7 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResultForbidden;
+use Snr\AccessResult\AccessResultForbidden;
 
 trait CompleteOperationTrait {
 

@@ -2,7 +2,7 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResult;
+use Snr\AccessResult\AccessResult;
 
 /**
  * Реализует методы для работы со свойством "Владелец" (Автор)

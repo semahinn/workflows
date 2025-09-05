@@ -2,8 +2,8 @@
 
 namespace Snr\Workflows\WorkflowItem;
 
-use Snr\Workflows\Access\AccessResult;
-use Snr\Workflows\Access\AccessResultInterface;
+use Snr\AccessResult\AccessResult;
+use Snr\AccessResult\AccessResultInterface;
 use Snr\Workflows\Dependency;
 use Snr\Workflows\DependencySingleton;
 use Snr\Workflows\Manager\WorkflowItemManagerInterface;
